@@ -30,6 +30,6 @@ def draw_keypoints(scene):
     cv2.imshow('scene_with_keypoints', scene_with_keypoints)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    
+
 scene, center_points = get_scene()
 draw_keypoints(scene)
