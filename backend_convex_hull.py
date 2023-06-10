@@ -5,27 +5,8 @@ import numpy as np
 from functools import partial
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
+from convex_hull import get_convex_hull
 from scipy.optimize import linear_sum_assignment
-
-def get_keypoints(scene):   
-    orb = cv2.ORB_create()
-    keypoints, _ = orb.detectAndCompute(scene, None)
-    scene_with_keypoints = cv2.drawKeypoints(scene, keypoints, None, color=(0, 255, 0), flags=0)
-    
-    return cv2.KeyPoint_convert(keypoints)
-
-def split_with_kmeans(k, data):
-    kmeans = KMeans(n_clusters=k)
-    kmeans.fit(data)
-
-    labels = kmeans.labels_
-
-    clusters = [[] for _ in range(k)] 
-
-    for i, label in enumerate(labels):
-        clusters[label].append(data[i])
-    
-    return clusters
 
 def visualize(iteration, error, X, Y, ax):
     plt.cla()
@@ -42,12 +23,8 @@ num_objects = 3
 obs, center_points_gtobs = get_scene()
 goal, center_points_gtgoal = get_scene()
 
-obs_keys = get_keypoints(obs)
-goal_keys = get_keypoints(goal)
-
-obs_key_clusters = split_with_kmeans(num_objects, obs_keys)
-goal_key_clusters = split_with_kmeans(num_objects, goal_keys)
-
+obs_key_clusters = get_convex_hull(obs)
+goal_key_clusters = get_convex_hull(goal)
 
 for i, (source, target) in enumerate(zip(obs_key_clusters, goal_key_clusters)):
     obs_key_clusters[i] = np.array(source)
@@ -67,7 +44,8 @@ for permutation in permutations:
         fig.add_axes([0, 0, 1, 1])
         callback = partial(visualize, ax=fig.axes[0])
 
-        reg = RigidRegistration(X=target, Y=source)
+        
+        reg = RigidRegistration(X=target.reshape(-1, 2), Y=source.reshape(-1, 2))
         TY, (s_reg, R_reg, t_reg) = reg.register(callback)
         plt.show()
         
