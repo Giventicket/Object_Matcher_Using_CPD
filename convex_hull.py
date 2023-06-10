@@ -78,7 +78,9 @@ def display_and_return_object_boundaries(scene, clusters, width, height):
         
         # 볼록 다각형 경계를 계산합니다.
         hull = cv2.convexHull(np.array(points))
-        convex_hull_list[cluster_idx].append(hull.tolist())
+        hull_list = hull.tolist()
+        squeezed_hull_list = [sublist[0] for sublist in hull_list]
+        convex_hull_list[cluster_idx].append(squeezed_hull_list)
         
         # 경계를 그립니다.
         color = colors[cluster_idx]
@@ -88,7 +90,6 @@ def display_and_return_object_boundaries(scene, clusters, width, height):
     # cv2.imshow('Object Boundaries', image)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
-    
     # squeeze
     convex_hull_list = [sublist[0] for sublist in convex_hull_list]
     

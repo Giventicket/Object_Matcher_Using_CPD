@@ -44,8 +44,7 @@ for permutation in permutations:
         fig.add_axes([0, 0, 1, 1])
         callback = partial(visualize, ax=fig.axes[0])
 
-        
-        reg = RigidRegistration(X=target.reshape(-1, 2), Y=source.reshape(-1, 2))
+        reg = RigidRegistration(X=target, Y=source)
         # TY, (s_reg, R_reg, t_reg) = reg.register(callback)
         # plt.show()
         
