@@ -5,6 +5,7 @@ import numpy as np
 from functools import partial
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
+from convex_hull import get_convex_hull
 
 def get_keypoints(scene):   
     orb = cv2.ORB_create()
@@ -43,8 +44,11 @@ goal, center_points_goal = get_scene()
 obs_keys = get_keypoints(obs)
 goal_keys = get_keypoints(goal)
 
-obs_keys = split_with_kmeans(3, obs_keys)
-goal_keys = split_with_kmeans( 3, goal_keys)
+# obs_keys = split_with_kmeans(3, obs_keys)
+# goal_keys = split_with_kmeans( 3, goal_keys)
+
+obs_keys = get_convex_hull()
+goal_keys = get_convex_hull()
 
 for i, (source, target) in enumerate(zip(obs_keys, goal_keys)):
     obs_keys[i] = np.array(source)
@@ -66,10 +70,10 @@ for permutation in permutations:
         callback = partial(visualize, ax=fig.axes[0])
 
         reg = RigidRegistration(X=target, Y=source)
-        # TY, (s_reg, R_reg, t_reg) = reg.register(callback)
-        # plt.show()
+        TY, (s_reg, R_reg, t_reg) = reg.register(callback)
+        plt.show()
         
-        TY, (s_reg, R_reg, t_reg) = reg.register(None)
+        # TY, (s_reg, R_reg, t_reg) = reg.register(None)
         
         # TY is the transformed source points
         #  s_reg the scale of the registration
