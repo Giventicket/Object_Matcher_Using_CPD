@@ -45,11 +45,11 @@ for permutation in permutations:
         callback = partial(visualize, ax=fig.axes[0])
 
         
-        reg = RigidRegistration(X=target.reshape(-1, 2), Y=source.reshape(-1, 2))
-        TY, (s_reg, R_reg, t_reg) = reg.register(callback)
-        plt.show()
+        reg = RigidRegistration(X=target, Y=source)
+        # TY, (s_reg, R_reg, t_reg) = reg.register(callback)
+        # plt.show()
         
-        # TY, (s_reg, R_reg, t_reg) = reg.register(None)
+        TY, (s_reg, R_reg, t_reg) = reg.register(None)
         
         # TY is the transformed source points
         #  s_reg the scale of the registration
