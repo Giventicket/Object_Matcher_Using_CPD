@@ -39,7 +39,6 @@ def get_scene():
 
     for object_path in selected_objects:
         object_image = Image.open(object_path).convert('RGBA')
-
         angle = random.randint(0, 360)
         rotated_object = object_image.rotate(angle, expand=True, fillcolor='white')
         rotated_object = rotated_object.resize((144, 144))
