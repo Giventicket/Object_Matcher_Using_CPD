@@ -5,6 +5,7 @@ import numpy as np
 from functools import partial
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
+from scipy.optimize import linear_sum_assignment
 
 def get_keypoints(scene):   
     orb = cv2.ORB_create()
@@ -14,7 +15,6 @@ def get_keypoints(scene):
     return cv2.KeyPoint_convert(keypoints)
 
 def split_with_kmeans(k, data):
-    k = 3
     kmeans = KMeans(n_clusters=k)
     kmeans.fit(data)
 
@@ -37,18 +37,20 @@ def visualize(iteration, error, X, Y, ax):
     plt.draw()
     plt.pause(0.001)
 
-obs, center_points_obs = get_scene()
-goal, center_points_goal = get_scene()
+num_objects = 3
+
+obs, center_points_gtobs = get_scene()
+goal, center_points_gtgoal = get_scene()
 
 obs_keys = get_keypoints(obs)
 goal_keys = get_keypoints(goal)
 
-obs_keys = split_with_kmeans(3, obs_keys)
-goal_keys = split_with_kmeans( 3, goal_keys)
+obs_key_clusters = split_with_kmeans(num_objects, obs_keys)
+goal_key_clusters = split_with_kmeans(num_objects, goal_keys)
 
-for i, (source, target) in enumerate(zip(obs_keys, goal_keys)):
-    obs_keys[i] = np.array(source)
-    goal_keys[i] = np.array(target)
+for i, (source, target) in enumerate(zip(obs_key_clusters, goal_key_clusters)):
+    obs_key_clusters[i] = np.array(source)
+    goal_key_clusters[i] = np.array(target)
 
 permutations = [[0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]]
 
@@ -57,9 +59,8 @@ match = None
 
 for permutation in permutations:
     score = 0
-    for i, source in enumerate(obs_keys):
-        obs_keys[i] = np.array(source)
-        target = goal_keys[permutation[i]]
+    for i, source in enumerate(obs_key_clusters):
+        target = goal_key_clusters[permutation[i]]
 
         fig = plt.figure()
         fig.add_axes([0, 0, 1, 1])
@@ -85,4 +86,30 @@ for permutation in permutations:
         match = permutation
         
 print(best_score, match)
-     
+
+def get_center_points_from_keypoints(clusters):
+    center_points = np.zeros((len(clusters), 2))
+    for i, cluster in  enumerate(clusters):
+        center_points[i, :] = cluster.mean(0)
+    return center_points
+
+def find_matching_indices(pred, gt):
+    # Calculate pairwise distances between all observations
+    pairwise_distances = np.linalg.norm(gt[:, np.newaxis] - pred, axis=2)
+    # Find the indices that minimize the sum of pairwise distances
+    row_indices, col_indices = linear_sum_assignment(pairwise_distances)
+
+    return col_indices
+
+
+
+center_points_obs = get_center_points_from_keypoints(obs_key_clusters)
+center_points_goal = get_center_points_from_keypoints(goal_key_clusters)
+
+print(center_points_obs)
+print(center_points_gtobs)
+print(find_matching_indices(center_points_obs, center_points_gtobs))
+
+print(center_points_goal)
+print(center_points_gtgoal)
+print(find_matching_indices(center_points_goal, center_points_gtgoal))

@@ -66,6 +66,7 @@ def get_scene():
     # output_path = 'workspace.png'
     # workspace.save(output_path)
     workspace = np.array(workspace)
+    center_points = np.array(center_points)
     
     return workspace, center_points
 
