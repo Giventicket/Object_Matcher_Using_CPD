@@ -11,5 +11,5 @@ def draw_keypoints(scene):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-scene, keypoints = get_scene()
+scene, centers = get_scene()
 draw_keypoints(scene)
