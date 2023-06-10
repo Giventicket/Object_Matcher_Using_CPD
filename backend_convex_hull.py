@@ -46,10 +46,10 @@ for permutation in permutations:
 
         
         reg = RigidRegistration(X=target.reshape(-1, 2), Y=source.reshape(-1, 2))
-        TY, (s_reg, R_reg, t_reg) = reg.register(callback)
-        plt.show()
+        # TY, (s_reg, R_reg, t_reg) = reg.register(callback)
+        # plt.show()
         
-        # TY, (s_reg, R_reg, t_reg) = reg.register(None)
+        TY, (s_reg, R_reg, t_reg) = reg.register(None)
         
         # TY is the transformed source points
         #  s_reg the scale of the registration
@@ -85,10 +85,31 @@ def find_matching_indices(pred, gt):
 center_points_obs = get_center_points_from_keypoints(obs_key_clusters)
 center_points_goal = get_center_points_from_keypoints(goal_key_clusters)
 
-print(center_points_obs)
-print(center_points_gtobs)
-print(find_matching_indices(center_points_obs, center_points_gtobs))
 
-print(center_points_goal)
-print(center_points_gtgoal)
-print(find_matching_indices(center_points_goal, center_points_gtgoal))
+# print(center_points_obs)
+# print(center_points_gtobs)
+# print(find_matching_indices(center_points_obs, center_points_gtobs))
+obs_mapping = find_matching_indices(center_points_obs, center_points_gtobs)
+
+# print(center_points_goal)
+# print(center_points_gtgoal)
+# print(find_matching_indices(center_points_goal, center_points_gtgoal))
+goal_mapping = find_matching_indices(center_points_goal, center_points_gtgoal)
+
+answer = []
+for i in range(num_objects):
+    answer.append([obs_mapping[i], goal_mapping[i]])
+answer.sort()
+
+pred = []
+for i in range(num_objects):
+    pred.append([i, match[i]])
+pred.sort()
+
+
+print(answer)
+print(pred)
+if answer == pred:
+    print("correct")
+else:
+    print("wrong")

@@ -17,14 +17,10 @@ def get_keypoints(scene):
 def split_with_kmeans(k, data):
     kmeans = KMeans(n_clusters=k)
     kmeans.fit(data)
-
     labels = kmeans.labels_
-
     clusters = [[] for _ in range(k)] 
-
     for i, label in enumerate(labels):
         clusters[label].append(data[i])
-    
     return clusters
 
 def visualize(iteration, error, X, Y, ax):
@@ -68,10 +64,10 @@ for permutation in permutations:
         callback = partial(visualize, ax=fig.axes[0])
 
         reg = RigidRegistration(X=target, Y=source)
-        TY, (s_reg, R_reg, t_reg) = reg.register(callback)
-        plt.show()
+        # TY, (s_reg, R_reg, t_reg) = reg.register(callback)
+        # plt.show()
         
-        # TY, (s_reg, R_reg, t_reg) = reg.register(None)
+        TY, (s_reg, R_reg, t_reg) = reg.register(None)
         
         # TY is the transformed source points
         #  s_reg the scale of the registration
@@ -99,18 +95,35 @@ def find_matching_indices(pred, gt):
     pairwise_distances = np.linalg.norm(gt[:, np.newaxis] - pred, axis=2)
     # Find the indices that minimize the sum of pairwise distances
     row_indices, col_indices = linear_sum_assignment(pairwise_distances)
-
     return col_indices
-
-
 
 center_points_obs = get_center_points_from_keypoints(obs_key_clusters)
 center_points_goal = get_center_points_from_keypoints(goal_key_clusters)
 
-print(center_points_obs)
-print(center_points_gtobs)
-print(find_matching_indices(center_points_obs, center_points_gtobs))
+# print(center_points_obs)
+# print(center_points_gtobs)
+# print(find_matching_indices(center_points_obs, center_points_gtobs))
+obs_mapping = find_matching_indices(center_points_obs, center_points_gtobs)
 
-print(center_points_goal)
-print(center_points_gtgoal)
-print(find_matching_indices(center_points_goal, center_points_gtgoal))
+# print(center_points_goal)
+# print(center_points_gtgoal)
+# print(find_matching_indices(center_points_goal, center_points_gtgoal))
+goal_mapping = find_matching_indices(center_points_goal, center_points_gtgoal)
+
+answer = []
+for i in range(num_objects):
+    answer.append([obs_mapping[i], goal_mapping[i]])
+answer.sort()
+
+pred = []
+for i in range(num_objects):
+    pred.append([i, match[i]])
+pred.sort()
+
+
+print(answer)
+print(pred)
+if answer == pred:
+    print("correct")
+else:
+    print("wrong")
