@@ -8,7 +8,10 @@ from sklearn.cluster import KMeans
 from convex_hull import get_convex_hull
 from scipy.optimize import linear_sum_assignment
 
+cnt = 1
+
 def visualize(iteration, error, X, Y, ax, goal):
+    global cnt
     plt.cla()
     ax.imshow(goal)
     ax.scatter(X[:, 0],  X[:, 1], color='red', label='Target', s=5)
@@ -17,6 +20,8 @@ def visualize(iteration, error, X, Y, ax, goal):
         iteration, error), horizontalalignment='center', verticalalignment='center', transform=ax.transAxes, fontsize='x-large')
     ax.legend(loc='upper left', fontsize='x-large')
     plt.draw()
+    # plt.savefig(str(cnt), format='png') # to save image
+    cnt = cnt + 1
     plt.pause(0.001)
 
 def get_center_points_from_keypoints(clusters):

@@ -24,6 +24,7 @@ def split_with_kmeans(k, data):
         clusters[label].append(data[i])
     return clusters
 
+
 def visualize(iteration, error, X, Y, ax, goal):
     plt.cla()
     ax.imshow(goal)
