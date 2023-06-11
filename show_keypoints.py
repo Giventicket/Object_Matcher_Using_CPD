@@ -28,6 +28,7 @@ def draw_keypoints(scene):
     scene_with_keypoints = cv2.drawKeypoints(scene_with_keypoints, clusters[2], None, color=(0, 0, 255), flags=0)
     
     cv2.imshow('scene_with_keypoints', scene_with_keypoints)
+    cv2.imshow('original_image', scene)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 

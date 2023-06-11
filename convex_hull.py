@@ -64,7 +64,7 @@ def display_clusters(scene,clusters, width, height):
 def display_and_return_object_boundaries(scene, clusters, width, height):
     # 이미지를 생성합니다.
     image = np.copy(scene)
-
+    
     # 객체 볼록 다각형 경계를 그릴 색상을 정의합니다.
     colors = [(0, 0, 255), (0, 255, 0), (255, 0, 0)]
 
@@ -87,9 +87,9 @@ def display_and_return_object_boundaries(scene, clusters, width, height):
         cv2.drawContours(image, [hull], 0, color, thickness=2)
 
     # 이미지를 화면에 표시합니다.
-    # cv2.imshow('Object Boundaries', image)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    cv2.imshow('Object Boundaries', image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
     # squeeze
     convex_hull_list = [sublist[0] for sublist in convex_hull_list]
     
@@ -110,3 +110,7 @@ def get_convex_hull(scene) :
     convex_hull_list = display_and_return_object_boundaries(scene, clusters, width, height)
     
     return convex_hull_list
+
+scene, center_points = get_scene()
+cv2.imshow('original Boundaries', scene)
+get_convex_hull(scene)
