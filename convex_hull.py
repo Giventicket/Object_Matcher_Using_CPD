@@ -87,9 +87,9 @@ def display_and_return_object_boundaries(scene, clusters, width, height):
         cv2.drawContours(image, [hull], 0, color, thickness=2)
 
     # 이미지를 화면에 표시합니다.
-    cv2.imshow('Object Boundaries', image)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.imshow('Object Boundaries', image)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
     # squeeze
     convex_hull_list = [sublist[0] for sublist in convex_hull_list]
     
@@ -111,6 +111,6 @@ def get_convex_hull(scene) :
     
     return convex_hull_list
 
-scene, center_points = get_scene()
-cv2.imshow('original Boundaries', scene)
-get_convex_hull(scene)
+# scene, center_points = get_scene()
+# cv2.imshow('original Boundaries', scene)
+# get_convex_hull(scene)

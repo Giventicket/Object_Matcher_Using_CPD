@@ -22,7 +22,7 @@ def visualize(iteration, error, X, Y, ax, goal):
         iteration, error), horizontalalignment='center', verticalalignment='center', transform=ax.transAxes, fontsize='x-large')
     ax.legend(loc='upper left', fontsize='x-large')
     plt.draw()
-    # plt.savefig(str(cnt), format='png') # to save image
+    plt.savefig(str(cnt), format='png') # to save image
     cnt = cnt + 1
     plt.pause(0.001)
 
@@ -61,6 +61,11 @@ for _ in range(100):
     match = None
 
     for permutation in permutations:
+    ## worst: order 2: 451.408
+    ## best: order 3: 271.922
+    
+        if permutation !=  [0, 2, 1]:
+            continue
         score = 0
         for i, source in enumerate(obs_key_clusters):
             target = goal_key_clusters[permutation[i]]
@@ -70,10 +75,10 @@ for _ in range(100):
             callback = partial(visualize, ax=fig.axes[0], goal=goal)
 
             reg = RigidRegistration(X=target, Y=source)
-            # TY, (s_reg, R_reg, t_reg) = reg.register(callback)
-            # plt.show()
+            TY, (s_reg, R_reg, t_reg) = reg.register(callback)
+            plt.show()
             
-            TY, (s_reg, R_reg, t_reg) = reg.register(None)
+            # TY, (s_reg, R_reg, t_reg) = reg.register(None)
             
             # TY is the transformed source points
             #  s_reg the scale of the registration
@@ -82,7 +87,7 @@ for _ in range(100):
 
             score = score + reg.q
         
-        # print(score)
+        print(score)
         
         if score < best_score:
             best_score = score

@@ -3,7 +3,11 @@ import random
 import numpy as np
 from PIL import Image
 
+random.seed(42)
+cnt = 0
+
 def get_scene():
+    
     object_paths = [
         '1-1.jpg',
         '1-2.jpg',
@@ -62,11 +66,13 @@ def get_scene():
         center_points.append([x + rotated_object.width / 2, y + rotated_object.height / 2])
         workspace.paste(rotated_object, (x, y), rotated_object)
 
-    # output_path = 'workspace.png'
+    # global cnt
+    # cnt = cnt + 1
+    # output_path = str(cnt) + '.png'
     # workspace.save(output_path)
     workspace = np.array(workspace)
     center_points = np.array(center_points)
     
     return workspace, center_points
 
-get_scene()
+# get_scene()
