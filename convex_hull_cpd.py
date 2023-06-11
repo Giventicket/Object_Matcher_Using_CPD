@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from convex_hull import get_convex_hull
 from scipy.optimize import linear_sum_assignment
+import time
+
 
 cnt = 1
 
@@ -39,6 +41,8 @@ def find_matching_indices(pred, gt):
     return col_indices
 
 for _ in range(100):    
+    start_time = time.time()
+
     num_objects = 3
 
     obs, center_points_gtobs = get_scene()
@@ -66,10 +70,10 @@ for _ in range(100):
             callback = partial(visualize, ax=fig.axes[0], goal=goal)
 
             reg = RigidRegistration(X=target, Y=source)
-            TY, (s_reg, R_reg, t_reg) = reg.register(callback)
-            plt.show()
+            # TY, (s_reg, R_reg, t_reg) = reg.register(callback)
+            # plt.show()
             
-            # TY, (s_reg, R_reg, t_reg) = reg.register(None)
+            TY, (s_reg, R_reg, t_reg) = reg.register(None)
             
             # TY is the transformed source points
             #  s_reg the scale of the registration
@@ -85,7 +89,9 @@ for _ in range(100):
             match = permutation
             
     # print(best_score, match)
-
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print("execution_time: ", execution_time, "sec")
 
 
     center_points_obs = get_center_points_from_keypoints(obs_key_clusters)
