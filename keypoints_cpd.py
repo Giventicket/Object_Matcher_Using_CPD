@@ -86,10 +86,10 @@ for _ in range(0, 100):
             callback = partial(visualize, ax=fig.axes[0], goal=goal)
 
             reg = RigidRegistration(X=target, Y=source)
-            # TY, (s_reg, R_reg, t_reg) = reg.register(callback)
-            # plt.show()
+            TY, (s_reg, R_reg, t_reg) = reg.register(callback)
+            plt.show()
             
-            TY, (s_reg, R_reg, t_reg) = reg.register(None)
+            # TY, (s_reg, R_reg, t_reg) = reg.register(None)
             
             # TY is the transformed source points
             #  s_reg the scale of the registration

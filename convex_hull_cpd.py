@@ -22,7 +22,7 @@ def visualize(iteration, error, X, Y, ax, goal):
         iteration, error), horizontalalignment='center', verticalalignment='center', transform=ax.transAxes, fontsize='x-large')
     ax.legend(loc='upper left', fontsize='x-large')
     plt.draw()
-    plt.savefig(str(cnt), format='png') # to save image
+    # plt.savefig(str(cnt), format='png') # to save image
     cnt = cnt + 1
     plt.pause(0.001)
 
